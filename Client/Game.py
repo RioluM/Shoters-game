@@ -24,8 +24,9 @@ class Game:
         while self.running:
             while not self.data_ready:
                 pass
-            self.screen.update(self.player.position, self.data[0], self.data[1], self.data[2])
+            data_copy = self.data.copy()
             self.data_ready = False
+            self.screen.update(self.player.position, data_copy[0], data_copy[1], data_copy[2])
             for ev in event.get():
                 if ev.type == KEYDOWN:
                     if ev.key == K_ESCAPE:
@@ -56,6 +57,8 @@ class Game:
 
     def data_transfer_thread(self):
         while True:
+            while self.data_ready:
+                pass
             if self.bullet_to_send is not None:
                 self.network.send(self.bullet_to_send)
                 self.bullet_to_send = None
